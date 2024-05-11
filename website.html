@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charity Currency Exchange</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #f2f2f2;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Charity Currency Exchange</h1>
+  <table id="currency-table">
+    <tr>
+      <th>Currency</th>
+      <th>Rate</th>
+    </tr>
+  </table>
+</div>
+
+<script>
+function fetchCurrencyRates() {
+  fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json')
+    .then(response => response.json())
+    .then(data => {
+      displayCurrencyRates(data);
+    })
+    .catch(error => {
+      console.error('Error fetching currency rates:', error);
+    });
+}
+
+function displayCurrencyRates(data) {
+  const currencyTable = document.getElementById('currency-table');
+  currencyTable.innerHTML = '';
+  data.forEach(currency => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${currency.cc}</td>
+      <td>${currency.rate}</td>
+    `;
+    currencyTable.appendChild(row);
+  });
+}
+
+setInterval(fetchCurrencyRates, 1000);
+fetchCurrencyRates();
+</script>
+
+</body>
+</html>
